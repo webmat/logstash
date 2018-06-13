@@ -1,0 +1,47 @@
+{
+  "index_patterns" : "suricata-*",
+  "version" : 1,
+  "settings" :
+  { "index":
+    { "refresh_interval" : "5s"
+    , "codec": "best_compression"
+    , "number_of_shards": 1
+    , "number_of_replicas": 0
+    , "auto_expand_replicas": "0-1"
+    }
+  },
+  "mappings" : {
+    "doc" : {
+      "properties" : {
+        "@timestamp": { "type": "date" },
+        "@version": { "type": "keyword", "index": false }
+      },
+
+      "dynamic_templates" :
+      [ { "ip_addresses" : {
+          "path_match" : "*.ip",
+          "mapping" : {
+            "type" : "ip"
+          }
+        }}
+      , { "string_fields" : {
+          "match_mapping_type" : "string",
+          "match" : "*",
+          "mapping" : {
+            "type" : "text", "norms" : false,
+            "fields" : {
+              "keyword" : { "type": "keyword", "ignore_above": 1024 }
+            }
+          }
+        }}
+      , { "geo_points" : {
+          "path_match" : "*.geoip.location.*",
+          "mapping" : {
+            "type" : "geo_point",
+            "ignore_malformed": true
+          }
+        }}
+      ]
+    }
+  }
+}
