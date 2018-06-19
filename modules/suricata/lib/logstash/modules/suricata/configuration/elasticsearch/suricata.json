@@ -35,7 +35,7 @@
           }
         }}
       , { "geo_points" : {
-          "path_match" : "*.geoip.location.*",
+          "path_match" : "*.geoip.location",
           "mapping" : {
             "type" : "geo_point",
             "ignore_malformed": true
